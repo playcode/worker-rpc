@@ -1,6 +1,6 @@
 {
-  "name": "worker-rpc",
-  "version": "0.2.0",
+  "name": "@playcode/worker-rpc",
+  "version": "0.3.1",
   "description": "A simple RPC layer for communicating with web workers and over other transports",
   "scripts": {
     "prepublish": "tsc",
@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DirtyHairy/worker-rpc"
+    "url": "https://github.com/playcode/worker-rpc"
   },
   "keywords": [
     "worker",
@@ -19,6 +19,8 @@
   "devDependencies": {
     "@types/mocha": "^5.2.6",
     "@types/node": "^12.0.2",
+    "jsdom": "^16.6.0",
+    "jsdom-global": "^3.0.2",
     "mocha": "~6.1.4",
     "ts-node": "^8.1.0",
     "typescript": "~3.4.5"

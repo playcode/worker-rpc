@@ -1,23 +1,35 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "es5",
-        "sourceMap": false,
-        "declaration": true,
-        "outDir": "lib",
-        "lib": ["es5", "es6", "dom"],
-        "esModuleInterop": true,
-
-        "strict": true,
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-        "strictFunctionTypes": true,
-        "strictBindCallApply": true,
-        "strictPropertyInitialization": true,
-        "noUnusedLocals": true,
-        "noImplicitReturns": true,
-        "alwaysStrict": true,
-    },
-    "include": ["src/**/*.ts", "test/**/*.ts"],
-    "exclude": ["node_modules"]
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": false,
+    "declaration": true,
+    "outDir": "lib",
+    "rootDirs": [
+      "src/"
+    ],
+    "lib": [
+      "es5",
+      "es6",
+      "dom"
+    ],
+    "esModuleInterop": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "alwaysStrict": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "test"
+  ]
 }
