@@ -1,6 +1,6 @@
 {
   "name": "@playcode/worker-rpc",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A simple RPC layer for communicating with web workers and over other transports",
   "scripts": {
     "prepublish": "tsc",
