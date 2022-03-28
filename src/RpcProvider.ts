@@ -27,7 +27,7 @@ class RpcProvider implements RpcProviderInterface {
   dispatch( payload: any, event: MessageEvent ): void {
     const message = payload as RpcProvider.Message
 
-    switch ( message.type ) {
+    switch ( message.__type ) {
       case RpcProvider.MessageType.signal:
         return this._handleSignal(message, event)
 
@@ -38,7 +38,7 @@ class RpcProvider implements RpcProviderInterface {
         return this._handleInternal(message)
 
       default:
-        this._raiseError(`invalid message type ${ message.type }`)
+        this._raiseError(`invalid message type ${ message.__type }`)
     }
   }
 
@@ -46,10 +46,11 @@ class RpcProvider implements RpcProviderInterface {
     const transactionId = this._nextTransactionId++
 
     this._dispatch({
-      type: RpcProvider.MessageType.rpc,
-      transactionId,
-      id,
-      payload,
+      __rpc: true,
+      __type: RpcProvider.MessageType.rpc,
+      __transactionId: transactionId,
+      __id: id,
+      __payload: payload,
     }, transfer ? transfer : undefined)
 
     return new Promise(
@@ -70,9 +71,10 @@ class RpcProvider implements RpcProviderInterface {
 
   signal<T = void>( id: string, payload?: T, transfer?: any ): this {
     this._dispatch({
-      type: RpcProvider.MessageType.signal,
-      id,
-      payload,
+      __rpc: true,
+      __type: RpcProvider.MessageType.signal,
+      __id: id,
+      __payload: payload,
     }, transfer ? transfer : undefined)
 
     return this
@@ -118,72 +120,75 @@ class RpcProvider implements RpcProviderInterface {
     this.error.dispatch(new Error(error))
 
     this._dispatch({
-      type: RpcProvider.MessageType.internal,
-      id: MSG_ERROR,
-      payload: error,
+      __rpc: true,
+      __type: RpcProvider.MessageType.internal,
+      __id: MSG_ERROR,
+      __payload: error,
     })
   }
 
   private _handleSignal( message: RpcProvider.Message, event: MessageEvent ): void {
-    if ( !this._signalHandlers[message.id] ) {
-      return this._raiseError(`invalid signal ${ message.id }`)
+    if ( !this._signalHandlers[message.__id] ) {
+      return this._raiseError(`invalid signal ${ message.__id }`)
     }
 
-    this._signalHandlers[message.id].forEach(handler => handler(message.payload, event))
+    this._signalHandlers[message.__id].forEach(handler => handler(message.__payload, event))
   }
 
   private _handeRpc( message: RpcProvider.Message, event: MessageEvent ): void {
-    if ( !this._rpcHandlers[message.id] ) {
-      return this._raiseError(`invalid rpc ${ message.id }`)
+    if ( !this._rpcHandlers[message.__id] ) {
+      return this._raiseError(`invalid rpc ${ message.__id }`)
     }
 
-    Promise.resolve(this._rpcHandlers[message.id](message.payload, event))
+    Promise.resolve(this._rpcHandlers[message.__id](message.__payload, event))
       .then(
         ( result: any ) => this._dispatch({
-          type: RpcProvider.MessageType.internal,
-          id: MSG_RESOLVE_TRANSACTION,
-          transactionId: message.transactionId,
-          payload: result,
+          __rpc: true,
+          __type: RpcProvider.MessageType.internal,
+          __id: MSG_RESOLVE_TRANSACTION,
+          __transactionId: message.__transactionId,
+          __payload: result,
         }),
         ( reason: string ) => this._dispatch({
-          type: RpcProvider.MessageType.internal,
-          id: MSG_REJECT_TRANSACTION,
-          transactionId: message.transactionId,
-          payload: reason,
+          __rpc: true,
+          __type: RpcProvider.MessageType.internal,
+          __id: MSG_REJECT_TRANSACTION,
+          __transactionId: message.__transactionId,
+          __payload: reason,
         }),
       )
   }
 
   private _handleInternal( message: RpcProvider.Message ): void {
-    const transaction = typeof ( message.transactionId ) !== 'undefined' ? this._pendingTransactions[message.transactionId] : undefined
+    const transaction = typeof ( message.__transactionId ) !== 'undefined' ? this._pendingTransactions[message.__transactionId] : undefined
 
-    switch ( message.id ) {
+    switch ( message.__id ) {
       case MSG_RESOLVE_TRANSACTION:
-        if ( !transaction || typeof ( message.transactionId ) === 'undefined' ) {
-          return this._raiseError(`no pending transaction with id ${ message.transactionId }`)
+        if ( !transaction || typeof ( message.__transactionId ) === 'undefined' ) {
+          return this._raiseError(`no pending transaction with id ${ message.__transactionId }`)
         }
 
-        transaction.resolve(message.payload)
-        this._clearTransaction(this._pendingTransactions[message.transactionId])
+        transaction.resolve(message.__payload)
+        this._clearTransaction(this._pendingTransactions[message.__transactionId])
 
         break
 
       case MSG_REJECT_TRANSACTION:
-        if ( !transaction || typeof ( message.transactionId ) === 'undefined' ) {
-          return this._raiseError(`no pending transaction with id ${ message.transactionId }`)
+        if ( !transaction || typeof ( message.__transactionId ) === 'undefined' ) {
+          return this._raiseError(`no pending transaction with id ${ message.__transactionId }`)
         }
 
-        this._pendingTransactions[message.transactionId].reject(message.payload)
-        this._clearTransaction(this._pendingTransactions[message.transactionId])
+        this._pendingTransactions[message.__transactionId].reject(message.__payload)
+        this._clearTransaction(this._pendingTransactions[message.__transactionId])
 
         break
 
       case MSG_ERROR:
-        this.error.dispatch(new Error(`remote error: ${ message.payload }`))
+        this.error.dispatch(new Error(`remote error: ${ message.__payload }`))
         break
 
       default:
-        this._raiseError(`unhandled internal message ${ message.id }`)
+        this._raiseError(`unhandled internal message ${ message.__id }`)
         break
     }
   }
@@ -228,10 +233,11 @@ module RpcProvider {
   }
 
   export interface Message {
-    type: MessageType;
-    transactionId?: number;
-    id: string;
-    payload?: any;
+    __rpc: true;
+    __type: MessageType;
+    __transactionId?: number;
+    __id: string;
+    __payload?: any;
   }
 
 }
