@@ -152,7 +152,7 @@ Register a handler function for signals with id `id`. Returns the provider insta
 ### Dispatching RPC calls
 
 ```js
-const result = rpc.rpc(id, payload, transfer);
+const result = rpc.rpc(id, payload, transfer, {timeout});
 ```
 
 Dispatch a RPC call and returns a promise for its result. The promise is rejected
@@ -163,6 +163,8 @@ the operation).
  * `payload` (optional): RPC call payload.
  * `transfer` (optional): List of `Transferables` that will be passed to dispatched
    (see above).
+ * `options` (optional): RPC call options.
+   * `options.timeout` (optional): Custom timeout to this RPC call.
 
 ### Dispatching signals
 

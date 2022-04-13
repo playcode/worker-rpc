@@ -1,6 +1,6 @@
 import { Event } from 'microevent.ts'
 
-import RpcProviderInterface from './RpcProviderInterface'
+import RpcProviderInterface  from './RpcProviderInterface'
 
 
 const MSG_RESOLVE_TRANSACTION = 'resolve_transaction',
@@ -42,7 +42,11 @@ class RpcProvider implements RpcProviderInterface {
     }
   }
 
-  rpc<T = void, U = void>( id: string, payload?: T, transfer?: any ): Promise<U> {
+  rpc<T = void, U = void>(
+    id: string,
+    payload?: T,
+    transfer?: any,
+    options: RpcProviderInterface.RpcCallOptions = {} ): Promise<U> {
     const transactionId = this._nextTransactionId++
 
     this._dispatch({
@@ -61,9 +65,11 @@ class RpcProvider implements RpcProviderInterface {
           reject,
         }
 
-        if ( this._rpcTimeout > 0 ) {
+        const timeout = options.timeout ||  this._rpcTimeout
+
+        if ( timeout > 0 ) {
           this._pendingTransactions[transactionId].timeoutHandle =
-            setTimeout(() => this._transactionTimeout(transaction), this._rpcTimeout)
+            setTimeout(() => this._transactionTimeout(transaction), timeout)
         }
       },
     )

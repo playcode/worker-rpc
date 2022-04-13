@@ -1,11 +1,12 @@
 import { EventInterface } from 'microevent.ts'
 
 
+
 interface RpcProviderInterface {
 
   dispatch( message: any, event: MessageEvent ): void;
 
-  rpc<T = void, U = void>( id: string, payload?: T, transfer?: Array<any> ): Promise<U>;
+  rpc<T = void, U = void>( id: string, payload?: T, transfer?: Array<any>, options?: RpcProviderInterface.RpcCallOptions ): Promise<U>;
 
   signal<T = void>( id: string, payload?: T, transfer?: Array<any> ): this;
 
@@ -22,6 +23,10 @@ interface RpcProviderInterface {
 }
 
 module RpcProviderInterface {
+
+  export interface RpcCallOptions {
+    timeout?: number
+  }
 
   export interface RpcHandler<T = void, U = void> {
     ( payload: T, event: MessageEvent ): Promise<U> | U;

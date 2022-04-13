@@ -190,6 +190,18 @@ suite('RPC provider', function () {
         .then(() => assert(errorRemote))
     })
 
+    test('RPC calls time out option', function () {
+      remote.registerRpcHandler('action', () => new Promise(r => setTimeout(() => r(10), 45)))
+
+      return local
+        .rpc('action', null, null, {timeout: 35})
+        .then(
+          () => Promise.reject('should have been rejected'),
+          () => ( assert(errorLocal), new Promise(r => setTimeout(r, 45)) ),
+        )
+        .then(() => assert(errorRemote))
+    })
+
     test('Multiple RPC handlers do not interfere', function () {
       remote.registerRpcHandler('a1', ( value: number ) => new Promise(r => setTimeout(() => r(value), 30)))
       remote.registerRpcHandler('a2', ( value: number ) => 2 * value)
