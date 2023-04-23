@@ -1,6 +1,7 @@
 **This is a fork of npm package `worker-rpc`**. 
  - Ports transferring.
- - Unique message interface. 
+ - Unique message interface.
+ - We use it havily in [PlayCode JavaScript Compiler](https://playcode.io/javascript-compiler)
 
 # What is it?
 
