@@ -1,7 +1,7 @@
 **This is a fork of npm package `worker-rpc`**. 
  - Ports transferring.
  - Unique message interface.
- - We use it havily in [#1 AI Website Builder - Describe what you need. AI builds it. Publish in one click.](https://playcode.io)
+ - We use it havily in [#1 AI Website Builder - Describe what you need. AI builds it. Publish in one click.](https://playcode.io/ai-website-builder)
 
 # What is it?
 
