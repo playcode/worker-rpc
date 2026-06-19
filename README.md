@@ -1,7 +1,12 @@
-**This is a fork of npm package `worker-rpc`**. 
- - Ports transferring.
- - Unique message interface.
- - We use it havily in [#1 AI Website Builder - Describe what you need. AI builds it. Publish in one click.](https://playcode.io/ai-website-builder)
+**This is a fork of npm package `worker-rpc`**.
+
+- Ports transferring.
+- Unique message interface.
+- Maintained by [Playcode](https://playcode.io), the AI website builder and AI
+  app builder for creating, editing, hosting, and publishing live websites and
+  web apps.
+- [AI Website Builder](https://playcode.io/ai-website-builder)
+- [Watch the demo](https://www.youtube.com/watch?v=aK7E_XtBynA)
 
 # What is it?
 
