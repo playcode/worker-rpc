@@ -1,9 +1,10 @@
 {
   "name": "@playcode/worker-rpc",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A simple RPC layer for communicating with web workers and over other transports",
+  "homepage": "https://playcode.io/ai-website-builder",
   "scripts": {
-    "prepublish": "tsc",
+    "prepublishOnly": "tsc",
     "test": "mocha --require ts-node/register -R spec -u tdd 'test/**/*.ts'"
   },
   "author": "Christian Speckner <cnspeckn@googlemail.com> (https://github.com/DirtyHairy/)",
@@ -32,7 +33,7 @@
   },
   "files": [
     "lib",
-    "READNE.md",
+    "README.md",
     "CHANGELOG.md"
   ]
 }
